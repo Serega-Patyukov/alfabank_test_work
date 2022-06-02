@@ -1,5 +1,6 @@
 package com.example.alfabank_test_work.servise;
 
+import com.example.alfabank_test_work.model.GifData;
 import com.example.alfabank_test_work.model.LatestExchangeRates;
 import com.example.alfabank_test_work.client.GiphyFeignClient;
 import com.example.alfabank_test_work.client.OpenExchangeRatesFeignClient;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class AlfaTestWorkServices {
     @Value("${giphy.rich}")
     private String rich;
 
-    public Object getLatest(String symbols) {
+    public String getGif(String symbols) {
 
         LocalDate dateYesterday = LocalDate.now().minusDays(1L);
 
@@ -36,11 +38,27 @@ public class AlfaTestWorkServices {
 
         if ( today.getRates().get(symbols) > yesterday.getRates().get(symbols) ) {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал ниже вчерашнего (tag = broke)");
-            return giphyFeignClient.getRandomGif(api_key, broke);
+
+            GifData gifData = giphyFeignClient.getRandomGif(api_key, broke);
+
+            Map<String, Object> data = gifData.getData();
+            Map<String, Object> images = (Map<String, Object>) data.get("images");
+            Map<String, String> original = (Map<String, String>) images.get("original");
+            String url = original.get("mp4");
+
+            return url;
         }
         else {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал выше вчерашнего (tag = rich)");
-            return giphyFeignClient.getRandomGif(api_key, rich);
+
+            GifData gifData = giphyFeignClient.getRandomGif(api_key, rich);
+
+            Map<String, Object> data = gifData.getData();
+            Map<String, Object> images = (Map<String, Object>) data.get("images");
+            Map<String, String> original = (Map<String, String>) images.get("original");
+            String url = original.get("mp4");
+
+            return url;
         }
     }
 }

@@ -6,12 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping
 @RequiredArgsConstructor
 @Slf4j
@@ -24,7 +25,7 @@ public class AlfaTestWorkController {
     private String errorMessage;
 
     @GetMapping("/")
-    public Object getLatest(@RequestParam String str) {
+    public String getGif(@RequestParam String str) {
 
         String symbols = str.toUpperCase();
 
@@ -35,6 +36,8 @@ public class AlfaTestWorkController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return alfaTestWorkServices.getLatest(symbols);
+        String url = alfaTestWorkServices.getGif(symbols);
+
+        return "redirect:" + url;
     }
 }
