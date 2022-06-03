@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 
 @Controller
-@RequestMapping
+@RequestMapping("/images")
 @RequiredArgsConstructor
 @Slf4j
 public class AlfaTestWorkController {
@@ -24,7 +24,7 @@ public class AlfaTestWorkController {
     @Value("${error.message}")
     private String errorMessage;
 
-    @GetMapping("/")
+    @GetMapping("/gif")
     public String getGif(@RequestParam String str) {
 
         String symbols = str.toUpperCase();

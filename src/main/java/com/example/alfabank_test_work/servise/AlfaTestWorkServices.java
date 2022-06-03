@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,27 +32,42 @@ public class AlfaTestWorkServices {
 
     public String getGif(String symbols) {
 
+        // Получаем вчерашнюю дату.
         LocalDate dateYesterday = LocalDate.now().minusDays(1L);
 
+        // Курс по отношению к USD за сегодня.
         LatestExchangeRates today = openExchangeRatesFeignClient.getLatest(app_id, symbols);
+        // Курс по отношению к USD за вчера.
         LatestExchangeRates yesterday = openExchangeRatesFeignClient.getHistorical(dateYesterday.toString(), app_id, symbols);
 
+        return getRandomGif(today, yesterday, symbols);
+    }
+    
+    public String getRandomGif(LatestExchangeRates today, LatestExchangeRates yesterday, String symbols) {
         if ( today.getRates().get(symbols) > yesterday.getRates().get(symbols) ) {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал ниже вчерашнего (tag = broke)");
-            return getRandomGif(giphyFeignClient.getRandomGif(api_key, broke));
+            return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, broke));
         }
         else {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал выше вчерашнего (tag = rich)");
-            return getRandomGif(giphyFeignClient.getRandomGif(api_key, rich));
+            return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, rich));
         }
     }
 
-    private String getRandomGif(GifData gifData) {
+    public String getOriginalUrlGif(GifData gifData) {
 
-        Map<String, Object> data = gifData.getData();
-        Map<String, Object> images = (Map<String, Object>) data.get("images");
-        Map<String, String> original = (Map<String, String>) images.get("original");
-        String url = original.get("webp");
+        Optional<GifData> data = Optional.ofNullable(gifData);
+
+        String url = data
+                .map(gifData1 -> (Map<String, Object>) gifData1.getData().get("images"))
+                .map(stringObjectMap -> (Map<String, Object>) stringObjectMap.get("original"))
+                .map(stringObjectMap -> (String)  stringObjectMap.get("webp"))
+                .get();
+
+//        Map<String, Object> data = gifData.getData();
+//        Map<String, Object> images = (Map<String, Object>) data.get("images");
+//        Map<String, String> original = (Map<String, String>) images.get("original");
+//        String url = original.get("webp");
 
         return url;
     }
