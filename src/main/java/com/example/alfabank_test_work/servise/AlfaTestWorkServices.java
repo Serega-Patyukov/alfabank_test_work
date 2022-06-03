@@ -38,27 +38,21 @@ public class AlfaTestWorkServices {
 
         if ( today.getRates().get(symbols) > yesterday.getRates().get(symbols) ) {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал ниже вчерашнего (tag = broke)");
-
-            GifData gifData = giphyFeignClient.getRandomGif(api_key, broke);
-
-            Map<String, Object> data = gifData.getData();
-            Map<String, Object> images = (Map<String, Object>) data.get("images");
-            Map<String, String> original = (Map<String, String>) images.get("original");
-            String url = original.get("mp4");
-
-            return url;
+            return getRandomGif(giphyFeignClient.getRandomGif(api_key, broke));
         }
         else {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал выше вчерашнего (tag = rich)");
-
-            GifData gifData = giphyFeignClient.getRandomGif(api_key, rich);
-
-            Map<String, Object> data = gifData.getData();
-            Map<String, Object> images = (Map<String, Object>) data.get("images");
-            Map<String, String> original = (Map<String, String>) images.get("original");
-            String url = original.get("mp4");
-
-            return url;
+            return getRandomGif(giphyFeignClient.getRandomGif(api_key, rich));
         }
+    }
+
+    private String getRandomGif(GifData gifData) {
+
+        Map<String, Object> data = gifData.getData();
+        Map<String, Object> images = (Map<String, Object>) data.get("images");
+        Map<String, String> original = (Map<String, String>) images.get("original");
+        String url = original.get("webp");
+
+        return url;
     }
 }

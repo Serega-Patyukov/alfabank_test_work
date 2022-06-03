@@ -8,7 +8,6 @@ import java.util.Map;
 public class GifData {
 
     private Map<String, Object> data;
-
     private Map<String, String> meta;
 
 }
