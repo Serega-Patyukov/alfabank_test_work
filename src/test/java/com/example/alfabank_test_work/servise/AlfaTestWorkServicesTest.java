@@ -25,6 +25,8 @@ public class AlfaTestWorkServicesTest {
     @Test
     void getRandomGifTest() {
 
+        //.andExpect(status().isFound())
+
         /*
         data1 - курс RUB по отношению к USD за 2022-03-25.
         data2 - курс RUB по отношению к USD за 2022-04-25.

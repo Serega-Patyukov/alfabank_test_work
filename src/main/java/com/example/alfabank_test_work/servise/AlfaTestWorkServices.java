@@ -1,5 +1,6 @@
 package com.example.alfabank_test_work.servise;
 
+import com.example.alfabank_test_work.exceptions.AlfaTestWorExceptions;
 import com.example.alfabank_test_work.model.GifData;
 import com.example.alfabank_test_work.model.LatestExchangeRates;
 import com.example.alfabank_test_work.client.GiphyFeignClient;
@@ -7,7 +8,9 @@ import com.example.alfabank_test_work.client.OpenExchangeRatesFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class AlfaTestWorkServices {
     private String broke;
     @Value("${giphy.rich}")
     private String rich;
+    @Value("${warn.message}")
+    private String warnMessage;
 
     public String getGif(String symbols) {
 
@@ -48,9 +53,12 @@ public class AlfaTestWorkServices {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал ниже вчерашнего (tag = broke)");
             return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, broke));
         }
-        else {
+        else if (today.getRates().get(symbols) < yesterday.getRates().get(symbols)) {
             log.info("Курс " + symbols + " по отношению к USD за сегодня стал выше вчерашнего (tag = rich)");
             return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, rich));
+        }
+        else {
+            throw new AlfaTestWorExceptions(warnMessage);
         }
     }
 

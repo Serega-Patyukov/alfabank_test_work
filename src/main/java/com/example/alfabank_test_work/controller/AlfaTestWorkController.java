@@ -21,8 +21,8 @@ public class AlfaTestWorkController {
     private final AlfaTestWorkServices alfaTestWorkServices;
     private final OpenExchangeRatesFeignClient openExchangeRatesFeignClient;
 
-    @Value("${error.message}")
-    private String errorMessage;
+    @Value("${warn.message.notfound}")
+    private String warnMessage;
 
     @GetMapping("/gif")
     public String getGif(@RequestParam String str) {
@@ -32,7 +32,7 @@ public class AlfaTestWorkController {
         Map<String, String> currencies = openExchangeRatesFeignClient.getCurrencies();
 
         if (!currencies.containsKey(symbols)) {
-            log.warn(errorMessage);
+            log.warn(warnMessage);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
