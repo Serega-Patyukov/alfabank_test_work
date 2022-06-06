@@ -25,7 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 public class AlfaTestWorkControllerTest {
 
     /*
-    Описание следующих полей находится тут application.properties.
+    Описание полей там application.properties.
      */
 
     @Value("${openexchangerates.app.id}")
@@ -60,6 +60,15 @@ public class AlfaTestWorkControllerTest {
 
         /*
         Этот метод тестирует контроллер, в который передается валюта.
+
+        Для успешного выполнения тестов, в application.properties нужно переключить внешиние сервисы на моки.
+        Для успешного выполнения тестов должно быть так
+
+            #openexchangerates.url.general=https://openexchangerates.org/api
+            openexchangerates.url.general=http://localhost:8089/openexchangerates.org/api
+
+            #giphy.url.general=https://api.giphy.com/v1/gifs
+            giphy.url.general=http://localhost:8089/api.giphy.com/v1/gifs
 
             В контроллер предается:
         - пустая строка;

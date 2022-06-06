@@ -21,6 +21,10 @@ import java.util.Optional;
 @Slf4j
 public class AlfaTestWorkServices {
 
+    /*
+    Описание полей там application.properties.
+     */
+
     private final OpenExchangeRatesFeignClient openExchangeRatesFeignClient;
     private final GiphyFeignClient giphyFeignClient;
 
@@ -34,6 +38,8 @@ public class AlfaTestWorkServices {
     private String rich;
     @Value("${warn.message}")
     private String warnMessage;
+    @Value("${warn.error}")
+    private String warnError;
 
     public String getGif(String symbols) {
 
@@ -45,37 +51,40 @@ public class AlfaTestWorkServices {
         // Курс по отношению к USD за вчера.
         LatestExchangeRates yesterday = openExchangeRatesFeignClient.getHistorical(dateYesterday.toString(), app_id, symbols);
 
+        // Тут вернем ссылку на гифку.
         return getRandomGif(today, yesterday, symbols);
     }
     
     public String getRandomGif(LatestExchangeRates today, LatestExchangeRates yesterday, String symbols) {
+
+        // Сравниваем значение курса валют за сегодня и вчера.И рандомно возвращаем соответствующую гифку.
         if ( today.getRates().get(symbols) > yesterday.getRates().get(symbols) ) {
-            log.info("Курс " + symbols + " по отношению к USD за сегодня стал ниже вчерашнего (tag = broke)");
             return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, broke));
         }
         else if (today.getRates().get(symbols) < yesterday.getRates().get(symbols)) {
-            log.info("Курс " + symbols + " по отношению к USD за сегодня стал выше вчерашнего (tag = rich)");
             return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, rich));
         }
-        else {
+        else {   // Если курсы валют равны, то вернем соответствующее сообщение.
+            log.warn(warnMessage);
             throw new AlfaTestWorExceptions(warnMessage);
         }
     }
 
     public String getOriginalUrlGif(GifData gifData) {
 
-        Optional<GifData> data = Optional.ofNullable(gifData);
+        // Достаем и json представления ссылку на гифку и возвращаем ее.
 
-        String url = data
-                .map(gifData1 -> (Map<String, Object>) gifData1.getData().get("images"))
-                .map(stringObjectMap -> (Map<String, Object>) stringObjectMap.get("original"))
-                .map(stringObjectMap -> (String)  stringObjectMap.get("webp"))
-                .get();
+        String url = "";
 
-//        Map<String, Object> data = gifData.getData();
-//        Map<String, Object> images = (Map<String, Object>) data.get("images");
-//        Map<String, String> original = (Map<String, String>) images.get("original");
-//        String url = original.get("webp");
+        try {
+            Map<String, Object> data = gifData.getData();
+            Map<String, Object> images = (Map<String, Object>) data.get("images");
+            Map<String, String> original = (Map<String, String>) images.get("original");
+            url = original.get("webp");
+        } catch (NullPointerException nullPointerException) {
+            log.warn(warnError);
+            throw new AlfaTestWorExceptions(warnError);
+        }
 
         return url;
     }

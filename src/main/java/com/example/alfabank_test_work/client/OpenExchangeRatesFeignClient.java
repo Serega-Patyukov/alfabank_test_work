@@ -11,13 +11,15 @@ import java.util.Map;
 @FeignClient(name = "${feign.client.name.one}", url = "${openexchangerates.url.general}")
 public interface OpenExchangeRatesFeignClient {
 
+    // Получаем курс переданной валюты на текущий момент.
     @GetMapping("/latest.json")
     LatestExchangeRates getLatest(@RequestParam String app_id,
                                   @RequestParam String symbols);
-
+    // Получаем список доступных валют.
     @GetMapping("/currencies.json")
     Map<String, String> getCurrencies();
 
+    // Получаем курс переданной валюты на указанную дату.
     @GetMapping("/historical/{date_json}.json")
     LatestExchangeRates getHistorical(@PathVariable String date_json,
                                       @RequestParam String app_id,

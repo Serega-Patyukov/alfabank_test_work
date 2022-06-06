@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "${feign.client.name.two}", url = "${giphy.url.general}")
 public interface GiphyFeignClient {
+    // Получаем рандомную гифку с указанным тегом поиска.
     @GetMapping("/random")
     GifData getRandomGif(@RequestParam String api_key, @RequestParam String tag);
 }

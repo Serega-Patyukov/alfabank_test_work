@@ -18,26 +18,34 @@ import java.util.Map;
 @Slf4j
 public class AlfaTestWorkController {
 
+    /*
+    Описание полей там application.properties.
+     */
+
     private final AlfaTestWorkServices alfaTestWorkServices;
     private final OpenExchangeRatesFeignClient openExchangeRatesFeignClient;
 
     @Value("${warn.message.notfound}")
-    private String warnMessage;
+    private String warnMessageNotFound;
 
     @GetMapping("/gif")
     public String getGif(@RequestParam String str) {
 
         String symbols = str.toUpperCase();
 
+        // Получаем список доступных валют.
         Map<String, String> currencies = openExchangeRatesFeignClient.getCurrencies();
 
+        // Ищем полученную валюту в полученном списке.
         if (!currencies.containsKey(symbols)) {
-            log.warn(warnMessage);
+            log.warn(warnMessageNotFound);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
+        // Получаем ссылку на гифку.
         String url = alfaTestWorkServices.getGif(symbols);
 
+        // Отображаем гифку.
         return "redirect:" + url;
     }
 }
