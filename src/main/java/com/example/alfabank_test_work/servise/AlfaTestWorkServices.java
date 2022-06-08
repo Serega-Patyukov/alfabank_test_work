@@ -57,7 +57,7 @@ public class AlfaTestWorkServices {
     
     public String getRandomGif(LatestExchangeRates today, LatestExchangeRates yesterday, String symbols) {
 
-        // Сравниваем значение курса валют за сегодня и вчера.И рандомно возвращаем соответствующую гифку.
+        // Сравниваем значение курса валют за сегодня и вчера. И рандомно возвращаем соответствующую гифку.
         if ( today.getRates().get(symbols) > yesterday.getRates().get(symbols) ) {
             return getOriginalUrlGif(giphyFeignClient.getRandomGif(api_key, broke));
         }

@@ -56,9 +56,9 @@ public class AlfaTestWorkServicesTest {
 
         А точнее метод getRandomGif().
 
-        И поправочка. Метод тестирует только те случаи когда курс валуты в разные дни разный.
+        И поправочка, метод тестирует только те случаи когда курс валюты в разные дни разный.
 
-        Для успешного выполнения тестов, в application.properties нужно переключить внешиние сервисы на моки.
+        Для успешного выполнения тестов, в application.properties нужно переключить внешние сервисы на моки.
         Для успешного выполнения тестов должно быть так
 
             #openexchangerates.url.general=https://openexchangerates.org/api
@@ -70,18 +70,18 @@ public class AlfaTestWorkServicesTest {
         На внешние сервисы написаны моки.
 
             Написанные моки:
-        - мок, который везвращает json представление курса валюты RUB по отношению к USD за 2022-03-25.
-        - мок, который везвращает json представление курса валюты RUB по отношению к USD за 2022-04-25.
-        - мок, который везвращает json представление курса валюты RUB по отношению к USD за 2021-12-30.
-        - мок, который везвращает json представление курса валюты RUB по отношению к USD за 2022-03-10.
-        - мок, который везвращает json представление рандомной гифки с тегом поиска rich.
-        - мок, который везвращает json представление рандомной гифки с тегом поиска broke.
+        - мок, который возвращает json представление курса валюты RUB по отношению к USD за 2022-03-25.
+        - мок, который возвращает json представление курса валюты RUB по отношению к USD за 2022-04-25.
+        - мок, который возвращает json представление курса валюты RUB по отношению к USD за 2021-12-30.
+        - мок, который возвращает json представление курса валюты RUB по отношению к USD за 2022-03-10.
+        - мок, который возвращает json представление рандомной гифки с тегом поиска rich.
+        - мок, который возвращает json представление рандомной гифки с тегом поиска broke.
 
-        Возвращаемые моками json представления валидны и взяты с соответствующий внешних сервисов.
+        Возвращаемые моками json представления валидны и взяты с соответствующих внешних сервисов.
          */
 
         /*
-        Следующий мок везвращает json представление рандомной гифки с тегом поиска rich.
+        Следующий мок возвращает json представление рандомной гифки с тегом поиска rich.
          */
         stubFor(WireMock.get(urlPathEqualTo("/api.giphy.com/v1/gifs/random"))
                 .withQueryParam("api_key", equalTo(api_key))
@@ -292,7 +292,7 @@ public class AlfaTestWorkServicesTest {
                 ));
 
         /*
-        Следующий мок везвращает json представление рандомной гифки с тегом поиска broke.
+        Следующий мок возвращает json представление рандомной гифки с тегом поиска broke.
          */
         stubFor(WireMock.get(urlPathEqualTo("/api.giphy.com/v1/gifs/random"))
                 .withQueryParam("api_key", equalTo(api_key))
@@ -503,7 +503,7 @@ public class AlfaTestWorkServicesTest {
                 ));
 
         /*
-        Следующий мок везвращает json представление курса валюты RUB по отношению к USD за 2022-03-25.
+        Следующий мок возвращает json представление курса валюты RUB по отношению к USD за 2022-03-25.
          */
         stubFor(WireMock.get(urlPathEqualTo("/openexchangerates.org/api/historical/2022-03-25.json"))
                 .withId(UUID.randomUUID())
@@ -523,7 +523,7 @@ public class AlfaTestWorkServicesTest {
                 ));
 
         /*
-        Следующий мок везвращает json представление курса валюты RUB по отношению к USD за 2022-04-25.
+        Следующий мок возвращает json представление курса валюты RUB по отношению к USD за 2022-04-25.
          */
         stubFor(WireMock.get(urlPathEqualTo("/openexchangerates.org/api/historical/2022-04-25.json"))
                 .withId(UUID.randomUUID())
@@ -553,7 +553,7 @@ public class AlfaTestWorkServicesTest {
         Assertions.assertEquals(alfaTestWorkServices.getRandomGif(data2, data1, tagOriginal), testGifRich);
 
         /*
-        Следующий мок везвращает json представление курса валюты RUB по отношению к USD за 2022-12-30.
+        Следующий мок возвращает json представление курса валюты RUB по отношению к USD за 2022-12-30.
          */
         stubFor(WireMock.get(urlPathEqualTo("/openexchangerates.org/api/historical/2021-12-30.json"))
                 .withId(UUID.randomUUID())
@@ -573,7 +573,7 @@ public class AlfaTestWorkServicesTest {
                 ));
 
         /*
-        Следующий мок везвращает json представление курса валюты RUB по отношению к USD за 2022-03-10.
+        Следующий мок возвращает json представление курса валюты RUB по отношению к USD за 2022-03-10.
          */
         stubFor(WireMock.get(urlPathEqualTo("/openexchangerates.org/api/historical/2022-03-10.json"))
                 .withId(UUID.randomUUID())
@@ -612,7 +612,7 @@ public class AlfaTestWorkServicesTest {
 
         И поправочка. Метод тестирует только на NullPointerException.
 
-        Для успешного выполнения тестов, в application.properties нужно переключить внешиние сервисы на моки.
+        Для успешного выполнения тестов, в application.properties нужно переключить внешние сервисы на моки.
         Для успешного выполнения тестов должно быть так
 
             #openexchangerates.url.general=https://openexchangerates.org/api
@@ -624,13 +624,13 @@ public class AlfaTestWorkServicesTest {
         На внешние сервисы написаны моки.
 
             Написанные моки:
-        - мок, который везвращает json представление рандомной гифки с тегом поиска broke.
+        - мок, который возвращает json представление рандомной гифки с тегом поиска broke.
 
         Возвращаемые моками json представления валидны и взяты с соответствующий внешних сервисов.
          */
 
         /*
-        Следующий мок везвращает json представление рандомной сломанной гифки с тегом поиска broke.
+        Следующий мок возвращает json представление рандомной сломанной гифки с тегом поиска broke.
          */
         stubFor(WireMock.get(urlPathEqualTo("/api.giphy.com/v1/gifs/random"))
                 .withQueryParam("api_key", equalTo(api_key))

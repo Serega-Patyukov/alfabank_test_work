@@ -19,7 +19,7 @@ public interface OpenExchangeRatesFeignClient {
     @GetMapping("/currencies.json")
     Map<String, String> getCurrencies();
 
-    // Получаем курс переданной валюты на указанную дату.
+    // Получаем курс переданной валюты за указанную дату.
     @GetMapping("/historical/{date_json}.json")
     LatestExchangeRates getHistorical(@PathVariable String date_json,
                                       @RequestParam String app_id,
